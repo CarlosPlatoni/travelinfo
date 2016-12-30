@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="TravelInfo.HoldingScreenPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TravelInfo"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    DataContext="{StaticResource HoldingScreenViewModel}"
+    mc:Ignorable="d">
+
+    <Grid Background="Black">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="48" Foreground="#FFF12525">TravelInfo</TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="20" Foreground="#FFF12525">You should be in bed!</TextBlock>
+        </StackPanel>
+
+        <interactivity:Interaction.Behaviors>
+            <core:EventTriggerBehavior EventName="Tapped">
+                <core:InvokeCommandAction Command="{Binding TappedCommand}" />
+            </core:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+    </Grid>
+</Page>

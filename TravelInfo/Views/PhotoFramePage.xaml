@@ -1,0 +1,47 @@
+﻿<Page x:Class="TravelInfo.PhotoFramePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+     
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+      xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:viewModel="using:TravelInfo.ViewModel"
+      DataContext="{StaticResource PhotoFrameViewModel}"
+      mc:Ignorable="d">
+
+    <Grid Background="Black">
+        <interactivity:Interaction.Behaviors>
+            <core:EventTriggerBehavior EventName="Tapped">
+                <core:InvokeCommandAction Command="{Binding TappedCommand}" />
+            </core:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+        <Image Name="Picture"
+               Width="Auto"
+               Height="Auto"
+               Margin="5,5,5,5"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               viewModel:ImageFadeBehaviour.UriImage="{Binding PictureUri}">
+            <interactivity:Interaction.Behaviors>
+                <viewModel:ImageFadeBehaviour/>
+            </interactivity:Interaction.Behaviors>
+        </Image>
+    </Grid>
+</Page>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
