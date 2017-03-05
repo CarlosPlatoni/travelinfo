@@ -16,7 +16,10 @@ namespace TravelInfo.Model
     public class TravelInfoModel
     {
         private bool timersrunning;
-        private CallbackDetail cb;
+
+        private const string tfl_app_key = "YOUR TFL APPLICATION KEY HERE";
+        private const string tfl_app_id = "YOUR TFL APPLICATION ID HERE";
+        private const string nr_token = "YOUR NATIONAL RAIL TOKEN HERE";
 
         public List<CallbackDetail> CallbackDetails;
 
@@ -231,7 +234,7 @@ namespace TravelInfo.Model
             catch (Exception)
             {
                 Debug.Write("NRCallback exception");
-            }       
+            }
         }
 
         private Task<GetDepartureBoardResponse> GetTrainsFromNationalRail(string stoppoint)
@@ -240,7 +243,7 @@ namespace TravelInfo.Model
             LDBServiceSoapClient client = new LDBServiceSoapClient();
 
             AccessToken accessToken = new AccessToken();
-            accessToken.TokenValue = "504f8ea2-6780-498a-a473-3ab6141b77b8";
+            accessToken.TokenValue = nr_token;
 
             using (new OperationContextScope(client.InnerChannel))
             {
@@ -283,7 +286,7 @@ namespace TravelInfo.Model
                 throw new Exception("Invalid header value: " + header);
             }
 
-            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/Line/{0}/Status/?detail=False&app_id=9a6b17fe&app_key=0c1d88db892d2462caeec4a634f0e894", stoppoints));
+            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/Line/{0}/Status/?detail=False&app_id={1}&app_key={2}", stoppoints, tfl_app_id, tfl_app_key));
 
             //Send the GET request asynchronously and retrieve the response as a string.
             Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
@@ -309,7 +312,7 @@ namespace TravelInfo.Model
         private async Task<List<TflPrediction>> GetDestinationBoardsFromTfl(string stoppoint)
         {
             Debug.WriteLine("GetDestinationBoardsFromTfl");
-            List<TflPrediction> tflpredictions= new List<TflPrediction>();
+            List<TflPrediction> tflpredictions = new List<TflPrediction>();
 
             HttpBaseProtocolFilter RootFilter = new HttpBaseProtocolFilter();
             RootFilter.CacheControl.ReadBehavior = Windows.Web.Http.Filters.HttpCacheReadBehavior.MostRecent;
@@ -334,7 +337,7 @@ namespace TravelInfo.Model
                 throw new Exception("Invalid header value: " + header);
             }
 
-            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/StopPoint/{0}/Arrivals?app_id=9a6b17fe&app_key=0c1d88db892d2462caeec4a634f0e894", stoppoint));
+            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/StopPoint/{0}/Arrivals?app_id={1}&app_key={2}", stoppoint, tfl_app_id, tfl_app_key));
 
             //Send the GET request asynchronously and retrieve the response as a string.
             Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
@@ -346,7 +349,7 @@ namespace TravelInfo.Model
                 httpResponse = await httpClient.GetAsync(requestUri);
                 httpResponse.EnsureSuccessStatusCode();
                 httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
-                tflpredictions = JsonConvert.DeserializeObject<List<TflPrediction>>(httpResponseBody);            
+                tflpredictions = JsonConvert.DeserializeObject<List<TflPrediction>>(httpResponseBody);
             }
             catch (Exception ex)
             {

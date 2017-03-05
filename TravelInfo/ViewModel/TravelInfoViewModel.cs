@@ -21,11 +21,8 @@ namespace TravelInfo.ViewModel
         private DateTime updateTimeLb;
         private DateTime updateTimeGp;
         private DateTime updateTimeTflLineStatus;
-        private int lockObject;
 
         private TravelInfoModel model { get; set; }
-
-        private bool timersrunning = false;
 
         private Timer clockTimer;
         private RelayCommand tappedCommand;
