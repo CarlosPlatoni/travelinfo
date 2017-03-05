@@ -9,10 +9,14 @@ using GalaSoft.MvvmLight.Threading;
 using System.Threading;
 using Windows.UI.Xaml;
 using GalaSoft.MvvmLight.Command;
+using PlatzInfo.Helpers;
 using TravelInfo.Helpers;
 
 namespace TravelInfo.ViewModel
 {
+    /// <summary>
+    /// ViewModel that provides the data for the Travel Info Screen
+    /// </summary>
     public class TravelInfoViewModel : INotifyPropertyChanged, IPlatzNavigate
     {
         private DateTime updateTime194;
@@ -38,6 +42,8 @@ namespace TravelInfo.ViewModel
         public ObservableCollection<TflPrediction> GpTubeTrains { get; set; }
 
         public ObservableCollection<TflLine> TflStatus { get; set; }
+
+        public string Title => AppConfiguration.TravelInfoTitle;
 
         public RelayCommand TappedCommand
         {

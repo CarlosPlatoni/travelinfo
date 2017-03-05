@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Behaviours\ImageFadeBehaviour.cs" />
     <Compile Include="Behaviours\VisibilityAnimationBehavior.cs" />
+    <Compile Include="Helpers\AppConfiguration.cs" />
     <Compile Include="Helpers\INavigate.cs" />
     <Compile Include="Helpers\IImageServer.cs" />
     <Compile Include="Helpers\Scheduler.cs" />

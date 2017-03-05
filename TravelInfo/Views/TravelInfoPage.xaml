@@ -27,7 +27,7 @@
                            FontSize="25"
                            Foreground="DodgerBlue"
                            VerticalAlignment="Center"
-                           Text="TravelInfo" />
+                           Text="{Binding Title}" />
             <Border BorderBrush="WhiteSmoke" BorderThickness="2">
                 <ListView Height="100"
                           Background="LightGoldenrodYellow"

@@ -19,13 +19,8 @@ namespace TravelInfo.ViewModel
         private Timer photochangetimer;
         private bool isbusy;
         private bool pictureVisible;
-        private int counter;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public PhotoFrameViewModel()
-        {
-        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -83,6 +78,9 @@ namespace TravelInfo.ViewModel
 
         public async Task LoadImage()
         {
+            Guid guid = Guid.NewGuid();
+            string uniquestring = guid.ToString().Replace("-", "");
+
             if (this.isbusy)
             {
                 Debug.WriteLine("Busy");
@@ -91,12 +89,7 @@ namespace TravelInfo.ViewModel
 
             this.isbusy = true;
 
-            Uri uri = new Uri(string.Format("http://lotso:9050/Service/GetImage?query={0}", counter));
-            this.counter++;
-            if (this.counter > 10000)
-            {
-                this.counter = 0;
-            }
+            Uri uri = new Uri(string.Format("http://lotso:9050/Service/GetImage?query={0}", uniquestring));
 
             try
             {

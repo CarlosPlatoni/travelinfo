@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using Windows.Web.Http.Filters;
 using Newtonsoft.Json;
-
+using PlatzInfo.Helpers;
 using TravelInfo.NRServiceReference;
 
 namespace TravelInfo.Model
@@ -16,10 +16,6 @@ namespace TravelInfo.Model
     public class TravelInfoModel
     {
         private bool timersrunning;
-
-        private const string tfl_app_key = "YOUR TFL APPLICATION KEY HERE";
-        private const string tfl_app_id = "YOUR TFL APPLICATION ID HERE";
-        private const string nr_token = "YOUR NATIONAL RAIL TOKEN HERE";
 
         public List<CallbackDetail> CallbackDetails;
 
@@ -201,19 +197,18 @@ namespace TravelInfo.Model
 
         private async void NrCallback(object state)
         {
-            try
+            CallbackDetail callbackdetail = state as CallbackDetail;
+            if (callbackdetail != null)
             {
-                CallbackDetail callbackdetail = state as CallbackDetail;
-                if (callbackdetail != null)
+                if (Interlocked.Exchange(ref callbackdetail.Running, 1) == 0)
                 {
-                    if (Interlocked.Exchange(ref callbackdetail.Running, 1) == 0)
+                    try
                     {
                         callbackdetail.NrPredictions.Clear();
 
                         if (this.timersrunning)
                         {
-                            GetDepartureBoardResponse response =
-                                await this.GetTrainsFromNationalRail(callbackdetail.StopPointId);
+                            GetDepartureBoardResponse response = await this.GetTrainsFromNationalRail(callbackdetail.StopPointId);
                             StationBoard stationBoard = response.GetStationBoardResult;
 
                             callbackdetail.Timestamp = stationBoard.generatedAt;
@@ -225,15 +220,16 @@ namespace TravelInfo.Model
 
                             this.Changed?.Invoke(callbackdetail);
                         }
-
-                        Interlocked.Decrement(ref callbackdetail.Running);
                     }
-
+                    catch (Exception)
+                    {
+                        Debug.WriteLine("NrCallback threw exception");
+                    }
+                    finally
+                    {
+                        Interlocked.Exchange(ref callbackdetail.Running, 0);
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                Debug.Write("NRCallback exception");
             }
         }
 
@@ -243,7 +239,7 @@ namespace TravelInfo.Model
             LDBServiceSoapClient client = new LDBServiceSoapClient();
 
             AccessToken accessToken = new AccessToken();
-            accessToken.TokenValue = nr_token;
+            accessToken.TokenValue = AppConfiguration.NrToken;
 
             using (new OperationContextScope(client.InnerChannel))
             {
@@ -286,7 +282,7 @@ namespace TravelInfo.Model
                 throw new Exception("Invalid header value: " + header);
             }
 
-            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/Line/{0}/Status/?detail=False&app_id={1}&app_key={2}", stoppoints, tfl_app_id, tfl_app_key));
+            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/Line/{0}/Status/?detail=False&app_id={1}&app_key={2}", stoppoints, AppConfiguration.TflAppId, AppConfiguration.TflAppKey));
 
             //Send the GET request asynchronously and retrieve the response as a string.
             Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
@@ -337,7 +333,7 @@ namespace TravelInfo.Model
                 throw new Exception("Invalid header value: " + header);
             }
 
-            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/StopPoint/{0}/Arrivals?app_id={1}&app_key={2}", stoppoint, tfl_app_id, tfl_app_key));
+            Uri requestUri = new Uri(string.Format("https://api.tfl.gov.uk/StopPoint/{0}/Arrivals?app_id={1}&app_key={2}", stoppoint, AppConfiguration.TflAppId, AppConfiguration.TflAppKey));
 
             //Send the GET request asynchronously and retrieve the response as a string.
             Windows.Web.Http.HttpResponseMessage httpResponse = new Windows.Web.Http.HttpResponseMessage();
