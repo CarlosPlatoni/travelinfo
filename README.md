@@ -1,7 +1,7 @@
 # TravelInfo
 ## Travel Information and Photoframe project for Windows IOT
 
-Universal Windows Application written in C# and XAML designed for a Raspberry Pi running Windows IOT with the official Raspberry Pi foundation screen. As it is a UWA the code can be used for Windows Phones and Windows 10 Store Apps.
+Universal Windows Application written in C# and XAML utilising MVVM. It is designed for a Raspberry Pi running Windows IOT with the official Raspberry Pi foundation screen, though as it is a UWA project the code can be used for Windows Phones and Windows 10 Store Apps.
 
 Connects to and displays on one screen
 - National Rail Darwin Feed to get National Rail times (Account required)
